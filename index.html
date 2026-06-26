@@ -7,230 +7,314 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:#f5f5f0;color:#1a1a18;min-height:100vh}
-.page{max-width:1000px;margin:0 auto;padding:20px 16px}
+.page{max-width:1040px;margin:0 auto;padding:20px 16px}
 
-#name-screen{background:#fff;border-radius:12px;border:1px solid #e5e5e0;padding:40px;max-width:400px;margin:60px auto;text-align:center}
-#name-screen h2{font-size:20px;font-weight:600;margin-bottom:8px}
-#name-screen p{font-size:14px;color:#888;margin-bottom:24px}
-#name-input{width:100%;padding:10px 14px;border:1px solid #d0d0c8;border-radius:8px;font-size:15px;outline:none;margin-bottom:12px}
-#name-input:focus{border-color:#378add}
-#start-btn{width:100%;padding:10px;background:#1a1a18;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;font-weight:500}
+#setup-screen{background:#fff;border-radius:14px;border:1px solid #e5e5e0;padding:36px;max-width:460px;margin:48px auto}
+#setup-screen h2{font-size:20px;font-weight:700;margin-bottom:6px}
+.sub{font-size:14px;color:#888;margin-bottom:24px}
+.field-label{font-size:12px;font-weight:700;color:#555;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+input[type=text]{width:100%;padding:10px 14px;border:1px solid #d0d0c8;border-radius:8px;font-size:14px;outline:none;margin-bottom:14px;color:#1a1a18;background:#fff}
+input[type=text]:focus{border-color:#378add;box-shadow:0 0 0 3px #e6f1fb}
+.hint{font-size:12px;color:#aaa;margin-top:-10px;margin-bottom:14px;line-height:1.5}
+.hint a{color:#378add;text-decoration:none}
+.hint a:hover{text-decoration:underline}
+#start-btn{width:100%;padding:11px;background:#1a1a18;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;font-weight:600;margin-top:4px}
 #start-btn:hover{background:#333}
+#start-btn:disabled{background:#ccc;cursor:not-allowed}
+.setup-error{background:#fef2f2;color:#b91c1c;font-size:13px;padding:10px 12px;border-radius:8px;margin-bottom:12px;display:none;border:1px solid #fecaca}
+
+.game-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.game-title{font-size:20px;font-weight:700}
+#player-tag{background:#e6f1fb;color:#185fa5;font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px}
 
 .game-layout{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
-@media(max-width:720px){.game-layout{grid-template-columns:1fr}}
+@media(max-width:740px){.game-layout{grid-template-columns:1fr}}
 
 .grid-card{background:#fff;border-radius:12px;border:1px solid #e5e5e0;padding:16px}
-table{border-collapse:collapse;width:100%;table-layout:fixed}
-td{text-align:center;vertical-align:middle;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #eee;color:#1a1a18;user-select:none;-webkit-user-select:none;transition:background .08s}
-td:hover{background:#e6f1fb;color:#185fa5}
-td.selecting{background:#378add;color:#fff}
-
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
 .stat{background:#f5f5f0;border-radius:8px;padding:10px;text-align:center}
-.stat-val{font-size:20px;font-weight:600;color:#1a1a18}
+.stat-val{font-size:20px;font-weight:700;color:#1a1a18}
 .stat-lbl{font-size:11px;color:#888;margin-top:2px}
+
+table{border-collapse:collapse;width:100%;table-layout:fixed}
+td{text-align:center;vertical-align:middle;font-size:13px;font-weight:700;cursor:pointer;border:1px solid #eee;color:#1a1a18;user-select:none;-webkit-user-select:none;height:30px;transition:background .07s}
+td:hover{background:#e6f1fb;color:#185fa5}
+
+.msg{font-size:13px;margin-top:10px;min-height:20px;text-align:center;font-weight:600}
 
 .sidebar{display:flex;flex-direction:column;gap:16px}
 .card{background:#fff;border-radius:12px;border:1px solid #e5e5e0;padding:16px}
-.card-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.card-title{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
 
-.word-item{display:flex;align-items:center;gap:8px;padding:5px 6px;font-size:13px;font-weight:500;border-radius:6px;margin-bottom:3px;color:#1a1a18;transition:all .2s}
+.word-item{display:flex;align-items:center;gap:8px;padding:5px 7px;font-size:13px;font-weight:600;border-radius:6px;margin-bottom:3px;transition:all .25s}
 .word-item.found{text-decoration:line-through;opacity:.7}
 .color-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 
-.msg{font-size:13px;color:#888;margin-top:10px;min-height:18px;text-align:center;font-weight:500}
-.msg.win{color:#3b6d11}
-
-.lb-row{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:13px;border-bottom:1px solid #f0f0ea}
+.lb-row{display:flex;align-items:center;gap:7px;padding:7px 0;font-size:13px;border-bottom:1px solid #f0f0ea}
 .lb-row:last-child{border-bottom:none}
-.lb-rank{width:24px;font-weight:700;font-size:12px;color:#888;flex-shrink:0}
+.lb-rank{width:26px;font-weight:700;font-size:13px;color:#888;flex-shrink:0;text-align:center}
 .lb-name{flex:1;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lb-name.me{color:#185fa5}
-.lb-score{font-size:12px;color:#888;flex-shrink:0;margin-right:4px}
+.lb-name.me{color:#185fa5;font-weight:700}
+.lb-words{font-size:12px;color:#555;font-weight:600;flex-shrink:0;margin-right:4px}
 .lb-time{font-size:11px;color:#aaa;flex-shrink:0}
 .lb-empty{font-size:13px;color:#aaa;text-align:center;padding:16px 0}
 
-button.action{margin-top:12px;width:100%;padding:8px;font-size:13px;border-radius:8px;cursor:pointer;background:#fff;border:1px solid #d0d0c8;color:#1a1a18}
+button.action{margin-top:12px;width:100%;padding:8px;font-size:13px;border-radius:8px;cursor:pointer;background:#fff;border:1px solid #d0d0c8;color:#1a1a18;font-weight:500}
 button.action:hover{background:#f5f5f0}
-#player-tag{display:inline-block;background:#e6f1fb;color:#185fa5;font-size:12px;font-weight:600;padding:3px 12px;border-radius:20px;margin-bottom:14px}
-h1{font-size:20px;font-weight:700;margin-bottom:6px}
 
-.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#555;background:#f5f5f0;padding:3px 8px;border-radius:20px}
+.sync-bar{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.sync-status{font-size:11px;color:#aaa}
+.sync-status.ok{color:#3b6d11}
+.sync-status.err{color:#b91c1c}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#ccc;display:inline-block;margin-right:4px}
+.sync-dot.ok{background:#22c55e}
+.sync-dot.err{background:#e24b4a}
+.sync-dot.loading{background:#f59e0b}
 </style>
 </head>
 <body>
 <div class="page">
 
-  <div id="name-screen">
-    <div style="font-size:36px;margin-bottom:12px">🤖</div>
-    <h2>AI Word Search</h2>
-    <p>Find 16 AI-related words. Each word lights up in its own color when found!</p>
-    <input id="name-input" type="text" placeholder="Enter your name" maxlength="20"/>
-    <button id="start-btn" onclick="startGame()">Start puzzle</button>
+<!-- SETUP -->
+<div id="setup-screen">
+  <div style="font-size:36px;margin-bottom:10px">🤖</div>
+  <h2>AI Word Search</h2>
+  <p class="sub">Find 15 AI words hidden in the grid. Scores sync live to Google Sheets!</p>
+
+  <div id="setup-error" class="setup-error"></div>
+
+  <div class="field-label">Your name</div>
+  <input type="text" id="inp-name" maxlength="24"/>
+
+  <button id="start-btn" onclick="startGame()">Start puzzle</button>
+</div>
+
+<!-- GAME -->
+<div id="game-screen" style="display:none">
+  <div class="game-header">
+    <span class="game-title">AI Word Search</span>
+    <span id="player-tag"></span>
   </div>
 
-  <div id="game-screen" style="display:none">
-    <h1>AI Word Search</h1>
-    <div id="player-tag"></div>
-    <div class="game-layout">
-      <div>
-        <div class="grid-card">
-          <div class="stats-row">
-            <div class="stat"><div class="stat-val" id="found-count">0</div><div class="stat-lbl">Found</div></div>
-            <div class="stat"><div class="stat-val" id="total-count">16</div><div class="stat-lbl">Total</div></div>
-            <div class="stat"><div class="stat-val" id="timer">0:00</div><div class="stat-lbl">Time</div></div>
-          </div>
-          <div style="overflow-x:auto"><table id="grid"></table></div>
-          <div class="msg" id="msg"></div>
-          <div class="legend" id="legend"></div>
+  <div class="game-layout">
+    <div>
+      <div class="grid-card">
+        <div class="stats-row">
+          <div class="stat"><div class="stat-val" id="found-count">0</div><div class="stat-lbl">Found</div></div>
+          <div class="stat"><div class="stat-val" id="total-count">15</div><div class="stat-lbl">Total</div></div>
+          <div class="stat"><div class="stat-val" id="pct">0%</div><div class="stat-lbl">Done</div></div>
+          <div class="stat"><div class="stat-val" id="timer">0:00</div><div class="stat-lbl">Time</div></div>
         </div>
+        <div style="overflow-x:auto"><table id="grid"></table></div>
+        <div class="msg" id="msg"></div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="card">
+        <div class="card-title">Words to find</div>
+        <div id="word-list"></div>
+        <button class="action" onclick="newGame()">New grid ↺</button>
       </div>
 
-      <div class="sidebar">
-        <div class="card">
-          <div class="card-title">Words to find</div>
-          <div id="word-list"></div>
-          <button class="action" onclick="newGame()">New grid ↺</button>
-        </div>
-        <div class="card">
-          <div class="card-title">Leaderboard</div>
-          <div id="leaderboard"><div class="lb-empty">No scores yet</div></div>
+      <div class="card">
+        <div class="card-title">🏆 Live leaderboard</div>
+        <div id="leaderboard"><div class="lb-empty">Loading…</div></div>
+        <div class="sync-bar">
+          <span id="sync-status" class="sync-status"><span class="sync-dot" id="sync-dot"></span>Not connected</span>
+          <button class="action" style="width:auto;margin:0;padding:4px 10px;font-size:11px" onclick="loadLeaderboard()">Refresh</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+</div>
+
 <script>
-const WORDS = [
+
+// ── WORDS ────────────────────────────────────────────────
+const WORD_LIST = [
   'TRANSFORMER','HALLUCINATION','REINFORCEMENT','TOKENS','GRADIENT',
   'EMBEDDING','PROMPT','TRAINING','MULTIMODAL','RETRIEVAL',
-  'INFERENCE','EPOCH','BATCH','ACTIVATION','LEARNING','GRADIENT'
+  'INFERENCE','EPOCH','BATCH','ACTIVATION','LEARNING'
 ];
-// Deduplicate (EMBEDDING appears twice, GRADIENT twice in original list)
-const WORD_LIST = [...new Set(WORDS)];
 
-// 16 distinct colors — background + text pairs
+// ── COLORS — one per word ────────────────────────────────
 const COLORS = [
-  {bg:'#dbeafe',text:'#1e40af',dot:'#3b82f6'},   // blue
-  {bg:'#dcfce7',text:'#166534',dot:'#22c55e'},   // green
-  {bg:'#fce7f3',text:'#9d174d',dot:'#ec4899'},   // pink
-  {bg:'#fef3c7',text:'#92400e',dot:'#f59e0b'},   // amber
-  {bg:'#ede9fe',text:'#5b21b6',dot:'#8b5cf6'},   // purple
-  {bg:'#ffedd5',text:'#9a3412',dot:'#f97316'},   // orange
-  {bg:'#cffafe',text:'#155e75',dot:'#06b6d4'},   // cyan
-  {bg:'#fef9c3',text:'#713f12',dot:'#eab308'},   // yellow
-  {bg:'#f0fdf4',text:'#14532d',dot:'#16a34a'},   // emerald
-  {bg:'#fdf2f8',text:'#831843',dot:'#d946ef'},   // fuchsia
-  {bg:'#e0f2fe',text:'#0c4a6e',dot:'#0ea5e9'},   // sky
-  {bg:'#f0fdf4',text:'#052e16',dot:'#15803d'},   // dark green
-  {bg:'#fff7ed',text:'#7c2d12',dot:'#ea580c'},   // deep orange
-  {bg:'#eef2ff',text:'#312e81',dot:'#6366f1'},   // indigo
-  {bg:'#fdf4ff',text:'#581c87',dot:'#a855f7'},   // violet
-  {bg:'#ecfdf5',text:'#064e3b',dot:'#10b981'},   // teal
+  {bg:'#dbeafe',text:'#1e40af',dot:'#3b82f6'},
+  {bg:'#dcfce7',text:'#166534',dot:'#22c55e'},
+  {bg:'#fce7f3',text:'#9d174d',dot:'#ec4899'},
+  {bg:'#fef3c7',text:'#92400e',dot:'#f59e0b'},
+  {bg:'#ede9fe',text:'#5b21b6',dot:'#8b5cf6'},
+  {bg:'#ffedd5',text:'#9a3412',dot:'#f97316'},
+  {bg:'#cffafe',text:'#155e75',dot:'#06b6d4'},
+  {bg:'#fef9c3',text:'#713f12',dot:'#eab308'},
+  {bg:'#f0fdf4',text:'#14532d',dot:'#16a34a'},
+  {bg:'#fdf2f8',text:'#831843',dot:'#d946ef'},
+  {bg:'#e0f2fe',text:'#0c4a6e',dot:'#0ea5e9'},
+  {bg:'#eef2ff',text:'#312e81',dot:'#6366f1'},
+  {bg:'#fff7ed',text:'#7c2d12',dot:'#ea580c'},
+  {bg:'#fdf4ff',text:'#581c87',dot:'#a855f7'},
+  {bg:'#ecfdf5',text:'#064e3b',dot:'#10b981'},
 ];
 
+// ── STATE ────────────────────────────────────────────────
 const SIZE = 18;
+let apiUrl = 'https://script.google.com/macros/s/AKfycbzUwN4cYCaGe-JAS2fEK0cQv64ZBNgPmn3omeRa83syCr6x07MvfpBLfp0PpnxX6CI6/exec';
+let playerName = '';
 let grid=[], placed=[], foundWords=new Set(), wordColorMap={};
 let selecting=false, startCell=null, currentCells=[];
-let playerName='', startTime=null, timerInterval=null, gameOver=false;
+let startTime=null, timerInterval=null, gameOver=false;
+let pollTimer=null;
 
-function startGame(){
-  const n=document.getElementById('name-input').value.trim();
-  if(!n){document.getElementById('name-input').focus();return;}
-  playerName=n;
-  document.getElementById('name-screen').style.display='none';
+// ── SETUP ────────────────────────────────────────────────
+async function startGame() {
+  const name = document.getElementById('inp-name').value.trim();
+  const errEl = document.getElementById('setup-error');
+  errEl.style.display = 'none';
+
+  if (!name) { errEl.textContent='Please enter your name.'; errEl.style.display='block'; return; }
+
+  const btn = document.getElementById('start-btn');
+  btn.disabled=true; btn.textContent='Connecting…';
+
+  playerName = name;
+  document.getElementById('setup-screen').style.display='none';
   document.getElementById('game-screen').style.display='block';
-  document.getElementById('player-tag').textContent='Playing as: '+playerName;
+  document.getElementById('player-tag').textContent='Playing as: ' + name;
   newGame();
-  loadLeaderboard();
+  startPolling();
 }
 
-function newGame(){
+// ── GOOGLE SHEETS API ────────────────────────────────────
+async function apiFetch() {
+  // GET — fetch leaderboard
+  const res = await fetch(apiUrl);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+
+async function apiPost(payload) {
+  // POST via no-cors (Apps Script redirect workaround)
+  // We use a form-encoded approach via URL params since Apps Script
+  // requires no-cors for POST from external pages
+  const params = new URLSearchParams({ data: JSON.stringify(payload) });
+  await fetch(apiUrl + '?' + params.toString(), {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString()
+  });
+  // no-cors means we can't read the response — that's fine
+}
+
+async function loadLeaderboard() {
+  const el = document.getElementById('leaderboard');
+  const dot = document.getElementById('sync-dot');
+  const status = document.getElementById('sync-status');
+  dot.className='sync-dot loading';
+  status.innerHTML='<span class="sync-dot loading"></span>Syncing…';
+  try {
+    const data = await apiFetch(apiUrl);
+    const scores = data.scores || [];
+    if (!scores.length) {
+      el.innerHTML='<div class="lb-empty">No scores yet — be the first!</div>';
+    } else {
+      el.innerHTML='';
+      scores.slice(0,15).forEach((entry,i) => {
+        const medals=['🥇','🥈','🥉'];
+        const rank = medals[i] || (i+1);
+        const isMe = entry.name === playerName;
+        const row = document.createElement('div');
+        row.className='lb-row';
+        row.innerHTML=`<span class="lb-rank">${rank}</span><span class="lb-name${isMe?' me':''}">${entry.name}${isMe?' ✦':''}</span><span class="lb-words">${entry.wordsFound}/${entry.total}</span><span class="lb-time">${formatTime(+entry.seconds)}</span>`;
+        el.appendChild(row);
+      });
+    }
+    status.innerHTML='<span class="sync-dot ok"></span>Updated ' + new Date().toLocaleTimeString();
+    status.className='sync-status ok';
+  } catch(e) {
+    status.innerHTML='<span class="sync-dot err"></span>Connection error';
+    status.className='sync-status err';
+  }
+}
+
+function startPolling() {
+  loadLeaderboard();
+  clearInterval(pollTimer);
+  pollTimer = setInterval(loadLeaderboard, 20000);
+}
+
+async function saveScore(seconds, wordsFound) {
+  try {
+    await apiPost({ name:playerName, wordsFound, total:placed.length, seconds });
+    setTimeout(loadLeaderboard, 1500); // wait a moment then refresh
+  } catch(e) {
+    console.error('Save failed', e);
+  }
+}
+
+// ── GAME LOGIC ───────────────────────────────────────────
+function newGame() {
   clearInterval(timerInterval);
-  grid=Array.from({length:SIZE},()=>Array(SIZE).fill(''));
+  grid = Array.from({length:SIZE}, () => Array(SIZE).fill(''));
   placed=[]; foundWords=new Set(); currentCells=[]; selecting=false; startCell=null; gameOver=false; startTime=null;
   wordColorMap={};
   document.getElementById('timer').textContent='0:00';
   document.getElementById('msg').textContent='';
-  document.getElementById('msg').className='msg';
-
-  // Assign colors
-  WORD_LIST.forEach((w,i)=>{ wordColorMap[w]=COLORS[i%COLORS.length]; });
-
-  for(const w of WORD_LIST) placeWord(w);
+  WORD_LIST.forEach((w,i) => { wordColorMap[w] = COLORS[i % COLORS.length]; });
+  for (const w of WORD_LIST) placeWord(w);
   fillRandom();
   renderGrid();
   renderWordList();
   updateStats();
-  renderLegend();
 }
 
-function placeWord(word){
+function placeWord(word) {
   const dirs=[[0,1],[1,0],[1,1],[-1,1],[0,-1],[-1,0],[-1,-1],[1,-1]];
   let tries=0;
-  while(tries++<500){
-    const[dr,dc]=dirs[Math.floor(Math.random()*dirs.length)];
+  while (tries++<600) {
+    const [dr,dc]=dirs[Math.floor(Math.random()*dirs.length)];
     const r=Math.floor(Math.random()*SIZE), c=Math.floor(Math.random()*SIZE);
     let ok=true, cells=[];
-    for(let i=0;i<word.length;i++){
+    for (let i=0;i<word.length;i++) {
       const nr=r+dr*i, nc=c+dc*i;
-      if(nr<0||nr>=SIZE||nc<0||nc>=SIZE){ok=false;break;}
-      if(grid[nr][nc]!==''&&grid[nr][nc]!==word[i]){ok=false;break;}
+      if (nr<0||nr>=SIZE||nc<0||nc>=SIZE){ok=false;break;}
+      if (grid[nr][nc]!==''&&grid[nr][nc]!==word[i]){ok=false;break;}
       cells.push([nr,nc]);
     }
-    if(ok){
-      cells.forEach(([nr,nc],i)=>grid[nr][nc]=word[i]);
-      placed.push({word,cells});
-      return;
-    }
+    if (ok){cells.forEach(([nr,nc],i)=>grid[nr][nc]=word[i]);placed.push({word,cells});return;}
   }
 }
 
-function fillRandom(){
+function fillRandom() {
   const L='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++) if(!grid[r][c]) grid[r][c]=L[Math.floor(Math.random()*26)];
+  for (let r=0;r<SIZE;r++) for (let c=0;c<SIZE;c++) if (!grid[r][c]) grid[r][c]=L[Math.floor(Math.random()*26)];
 }
 
-// Map of cell key -> word (for found cells)
-function buildCellWordMap(){
+function buildCellWordMap() {
   const map={};
-  for(const p of placed){
-    if(foundWords.has(p.word)){
-      for(const[r,c] of p.cells) map[r+','+c]=p.word;
-    }
-  }
+  for (const p of placed) if (foundWords.has(p.word)) for (const [r,c] of p.cells) map[r+','+c]=p.word;
   return map;
 }
 
-function renderGrid(){
+function renderGrid() {
   const table=document.getElementById('grid');
   table.innerHTML='';
-  for(let r=0;r<SIZE;r++){
+  for (let r=0;r<SIZE;r++) {
     const tr=document.createElement('tr');
-    for(let c=0;c<SIZE;c++){
+    for (let c=0;c<SIZE;c++) {
       const td=document.createElement('td');
       td.style.width=(100/SIZE)+'%';
-      td.style.height='32px';
       td.textContent=grid[r][c];
       td.dataset.r=r; td.dataset.c=c;
-      td.addEventListener('mousedown',onDown);
-      td.addEventListener('mouseover',onOver);
-      td.addEventListener('mouseup',onUp);
-      td.addEventListener('touchstart',e=>{
-        const t=e.touches[0];
-        const el=document.elementFromPoint(t.clientX,t.clientY);
-        if(el&&el.tagName==='TD') onDown({target:el});
-      },{passive:true});
-      td.addEventListener('touchmove',e=>{
-        e.preventDefault();
-        const t=e.touches[0];
-        const el=document.elementFromPoint(t.clientX,t.clientY);
-        if(el&&el.tagName==='TD') onOver({target:el});
-      },{passive:false});
-      td.addEventListener('touchend',onUp);
+      td.addEventListener('mousedown', onDown);
+      td.addEventListener('mouseover', onOver);
+      td.addEventListener('mouseup', onUp);
+      td.addEventListener('touchstart', e=>{const t=e.touches[0];const el=document.elementFromPoint(t.clientX,t.clientY);if(el&&el.tagName==='TD')onDown({target:el});},{passive:true});
+      td.addEventListener('touchmove', e=>{e.preventDefault();const t=e.touches[0];const el=document.elementFromPoint(t.clientX,t.clientY);if(el&&el.tagName==='TD')onOver({target:el});},{passive:false});
+      td.addEventListener('touchend', onUp);
       tr.appendChild(td);
     }
     table.appendChild(tr);
@@ -238,110 +322,93 @@ function renderGrid(){
   refreshCells();
 }
 
-function refreshCells(){
-  const cellWordMap=buildCellWordMap();
-  document.querySelectorAll('#grid td').forEach(td=>{
+function refreshCells() {
+  const cwm=buildCellWordMap();
+  document.querySelectorAll('#grid td').forEach(td => {
     const key=td.dataset.r+','+td.dataset.c;
-    const isSelecting=currentCells.some(([r,c])=>r==td.dataset.r&&c==td.dataset.c);
-
-    if(isSelecting){
-      td.style.background='#378add';
-      td.style.color='#fff';
-    } else if(cellWordMap[key]){
-      const col=wordColorMap[cellWordMap[key]];
-      td.style.background=col.bg;
-      td.style.color=col.text;
-    } else {
-      td.style.background='';
-      td.style.color='';
-    }
+    const isSel=currentCells.some(([r,c])=>r==td.dataset.r&&c==td.dataset.c);
+    if (isSel){td.style.background='#378add';td.style.color='#fff';}
+    else if (cwm[key]){const col=wordColorMap[cwm[key]];td.style.background=col.bg;td.style.color=col.text;}
+    else {td.style.background='';td.style.color='';}
   });
 }
 
-function cellsBetween(r1,c1,r2,c2){
-  const dr=r2-r1, dc=c2-c1;
-  const len=Math.max(Math.abs(dr),Math.abs(dc));
-  if(len===0) return[[r1,c1]];
+function cellsBetween(r1,c1,r2,c2) {
+  const dr=r2-r1, dc=c2-c1, len=Math.max(Math.abs(dr),Math.abs(dc));
+  if (len===0) return [[r1,c1]];
   const sR=dr===0?0:dr/Math.abs(dr), sC=dc===0?0:dc/Math.abs(dc);
-  if(Math.abs(dr)!==0&&Math.abs(dc)!==0&&Math.abs(dr)!==Math.abs(dc)) return[[r1,c1]];
+  if (Math.abs(dr)!==0&&Math.abs(dc)!==0&&Math.abs(dr)!==Math.abs(dc)) return [[r1,c1]];
   const cells=[];
-  for(let i=0;i<=len;i++) cells.push([r1+sR*i,c1+sC*i]);
+  for (let i=0;i<=len;i++) cells.push([r1+sR*i,c1+sC*i]);
   return cells;
 }
 
-function onDown(e){
-  if(gameOver)return;
-  if(!startTime){startTime=Date.now();startTimer();}
-  selecting=true;
-  startCell=[+e.target.dataset.r,+e.target.dataset.c];
-  currentCells=[startCell];
+function onDown(e) {
+  if (gameOver) return;
+  if (!startTime){startTime=Date.now();startTimer();}
+  selecting=true; startCell=[+e.target.dataset.r,+e.target.dataset.c]; currentCells=[startCell];
   refreshCells();
 }
-function onOver(e){
-  if(!selecting||!startCell||gameOver)return;
+function onOver(e) {
+  if (!selecting||!startCell||gameOver) return;
   currentCells=cellsBetween(startCell[0],startCell[1],+e.target.dataset.r,+e.target.dataset.c);
   refreshCells();
 }
-function onUp(){
-  if(!selecting)return;
-  selecting=false;
-  checkWord();
-  currentCells=[];
-  refreshCells();
+function onUp() {
+  if (!selecting) return;
+  selecting=false; checkWord(); currentCells=[]; refreshCells();
 }
-document.addEventListener('mouseup',()=>{if(selecting){selecting=false;checkWord();currentCells=[];refreshCells();}});
+document.addEventListener('mouseup', ()=>{if(selecting){selecting=false;checkWord();currentCells=[];refreshCells();}});
 
-function checkWord(){
+function checkWord() {
   const sel=currentCells.map(([r,c])=>grid[r][c]).join('');
   const rev=sel.split('').reverse().join('');
-  for(const p of placed){
-    if((p.word===sel||p.word===rev)&&!foundWords.has(p.word)){
+  for (const p of placed) {
+    if ((p.word===sel||p.word===rev) && !foundWords.has(p.word)) {
       foundWords.add(p.word);
       const col=wordColorMap[p.word];
       const msg=document.getElementById('msg');
-      msg.style.color=col.text;
-      msg.textContent='Found: '+p.word+'!';
-      updateStats();
-      renderWordList();
-      refreshCells();
-      if(foundWords.size===placed.length) onWin();
+      msg.style.color=col.text; msg.textContent='Found: '+p.word+'!';
+      updateStats(); renderWordList(); refreshCells();
+      if (foundWords.size===placed.length) onWin();
       return;
     }
   }
 }
 
-function startTimer(){
+function startTimer() {
   clearInterval(timerInterval);
   timerInterval=setInterval(()=>{
-    if(!startTime)return;
+    if (!startTime) return;
     const s=Math.floor((Date.now()-startTime)/1000);
     document.getElementById('timer').textContent=Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60);
-  },500);
+  }, 500);
 }
 
-function onWin(){
+async function onWin() {
   clearInterval(timerInterval);
   gameOver=true;
   const elapsed=Math.round((Date.now()-startTime)/1000);
   const msg=document.getElementById('msg');
   msg.style.color='#166534';
-  msg.textContent='All words found in '+formatTime(elapsed)+'! Well done!';
-  saveScore(playerName,elapsed,placed.length);
-  setTimeout(loadLeaderboard,400);
+  msg.textContent='All words found in '+formatTime(elapsed)+'! Saving score…';
+  await saveScore(elapsed, placed.length);
+  msg.textContent='All words found in '+formatTime(elapsed)+'! Score saved to Sheets!';
 }
 
-function formatTime(s){return Math.floor(s/60)+'m '+s%60+'s';}
-function updateStats(){
+function formatTime(s){return Math.floor(s/60)+'m '+(s%60)+'s';}
+
+function updateStats() {
   document.getElementById('found-count').textContent=foundWords.size;
   document.getElementById('total-count').textContent=placed.length;
+  document.getElementById('pct').textContent=Math.round(foundWords.size/placed.length*100)+'%';
 }
 
-function renderWordList(){
+function renderWordList() {
   const el=document.getElementById('word-list');
   el.innerHTML='';
-  for(const p of placed){
-    const col=wordColorMap[p.word];
-    const isFound=foundWords.has(p.word);
+  for (const p of placed) {
+    const col=wordColorMap[p.word], isFound=foundWords.has(p.word);
     const d=document.createElement('div');
     d.className='word-item'+(isFound?' found':'');
     d.style.background=isFound?col.bg:'transparent';
@@ -350,40 +417,11 @@ function renderWordList(){
   }
 }
 
-function renderLegend(){
-  const el=document.getElementById('legend');
-  el.innerHTML='';
-}
-
-// Leaderboard via localStorage
-function saveScore(name,seconds,wordsFound){
-  try{
-    const lb=getLeaderboard();
-    lb.push({name,seconds,wordsFound,date:new Date().toLocaleDateString()});
-    lb.sort((a,b)=>b.wordsFound-a.wordsFound||a.seconds-b.seconds);
-    localStorage.setItem('ai_ws_lb2',JSON.stringify(lb.slice(0,15)));
-  }catch(e){}
-}
-function getLeaderboard(){
-  try{return JSON.parse(localStorage.getItem('ai_ws_lb2')||'[]');}catch(e){return[];}
-}
-function loadLeaderboard(){
-  const lb=getLeaderboard();
-  const el=document.getElementById('leaderboard');
-  if(!lb.length){el.innerHTML='<div class="lb-empty">No scores yet — be the first!</div>';return;}
-  el.innerHTML='';
-  lb.forEach((entry,i)=>{
-    const medals=['🥇','🥈','🥉'];
-    const rank=medals[i]||(i+1);
-    const row=document.createElement('div');
-    row.className='lb-row';
-    const isMe=entry.name===playerName;
-    row.innerHTML=`<span class="lb-rank">${rank}</span><span class="lb-name${isMe?' me':''}">${entry.name}${isMe?' ✦':''}</span><span class="lb-score">${entry.wordsFound}/${placed.length||16}</span><span class="lb-time">${formatTime(entry.seconds)}</span>`;
-    el.appendChild(row);
-  });
-}
-
-document.getElementById('name-input').addEventListener('keydown',e=>{if(e.key==='Enter')startGame();});
+document.getElementById('inp-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    startGame();
+  }
+});
 </script>
 </body>
 </html>
