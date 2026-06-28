@@ -393,7 +393,7 @@ async function onWin() {
   msg.style.color='#166534';
   msg.textContent='All words found in '+formatTime(elapsed)+'! Saving score…';
   await saveScore(elapsed, placed.length);
-  msg.textContent='All words found in '+formatTime(elapsed)+'! Score saved!';
+  msg.textContent='All words found in '+formatTime(elapsed)+'! Score saved! ';
 }
 
 function formatTime(s){return Math.floor(s/60)+'m '+(s%60)+'s';}
